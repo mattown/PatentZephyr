@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE ttab-proceedings [
+<!-- DOCUMENT TYPE DEFINITION FOR UNITED STATES TRADEMARK TRIAL AND APPEAL BOARD (TTAB) PROCEEDINGS
+Reference this DTD as PUBLIC "-//USPTO//DTD TTAB PROCEEDINGS V1.0 2004-02-13//EN"
+
+Contact:
+U.S. Patent and Trademark Office
+Electronic Information Products Division
+P.O. Box 1450
+Alexandria, VA 22313
+ipd@uspto.gov
+
+***** START REVISION HISTORY *****
+2000-09-01
+1) Renamed element ttab-proceedings to ttab-proceedings enforcing all uppercase element names.
+2) Changed xml encoding from "ISO-8859-1" to "UTF-8"
+3) Added prolog comment with DTD identification and contact information
+4) Defined initial version of V0.1 and build date of 2000-09-01.
+
+2000-11-14
+1) Added element mark-text to property group.
+
+2000-11-15
+1) Reviewed optionality requirements and made more elements optional to reflect source
+   database requirements.
+2) Removed PURGE-INDICATOR element.
+
+2001-03-21
+1) Added history-text to prosecution-entry and information-text to PROCEEDING.
+
+2002-07-1
+1) Removed information-text and added status-text to proceeding-entry.
+2) Added identifier to prosecution-entry.
+2002-08-26
+1)Added the interlocutory-attorney-name, location-code, day-in-location, charge-to-location-code, charge-to-employee-name, into proceeding-information
+2)Added data-available-code into proceeding-information
+2002-09-25
+1)Added the int-attorney-number(employee-number) into proceeding information
+2)Added identifier into party, property and address table
+2004-02-13
+1) Removed status-text from proceeding-entry (reference table).
+***** END REVISION HISTORY **********
+-->
+<!ELEMENT ttab-proceedings (version , action-key-code , transaction-date , proceeding-information)>
+<!ELEMENT version (version-no , version-date)>
+<!ELEMENT version-no (#PCDATA)>
+<!ELEMENT version-date (#PCDATA)>
+<!ELEMENT action-key-code (#PCDATA)>
+<!ELEMENT transaction-date (#PCDATA)>
+<!ELEMENT proceeding-information (data-available-code | proceeding-entry+)>
+<!ELEMENT data-available-code (#PCDATA)>
+<!ELEMENT proceeding-entry (number, type-code?, filing-date?, employee-number?, interlocutory-attorney-name?, location-code?, day-in-location?, charge-to-location-code?, charge-to-employee-name?, status-update-date?, status-code?, party-information?, prosecution-history?)>
+<!ELEMENT number (#PCDATA)>
+<!ELEMENT type-code (#PCDATA)>
+<!ELEMENT filing-date (#PCDATA)>
+<!ELEMENT employee-number (#PCDATA)>
+<!ELEMENT interlocutory-attorney-name (#PCDATA)>
+<!ELEMENT location-code (#PCDATA)>
+<!ELEMENT day-in-location (#PCDATA)>
+<!ELEMENT charge-to-location-code (#PCDATA)>
+<!ELEMENT charge-to-employee-name (#PCDATA)>
+<!ELEMENT status-update-date (#PCDATA)>
+<!ELEMENT status-code (#PCDATA)>
+<!ELEMENT party-information (party*)>
+<!ELEMENT party (identifier?, role-code?, name?, orgname?, property-information?, address-information?)>
+<!ELEMENT identifier (#PCDATA)>
+<!ELEMENT role-code (#PCDATA)>
+<!ELEMENT name (#PCDATA)>
+<!ELEMENT orgname (#PCDATA)>
+<!ELEMENT property-information (property*)>
+<!ELEMENT property (identifier?, serial-number?, registration-number?, mark-text?)>
+<!ELEMENT serial-number (#PCDATA)>
+<!ELEMENT registration-number (#PCDATA)>
+<!ELEMENT mark-text (#PCDATA)>
+<!ELEMENT address-information (proceeding-address*)>
+<!ELEMENT proceeding-address (identifier?, type-code?, name?, orgname?, address-1?, city?, state?, country?, postcode?)>
+<!ELEMENT address-1 (#PCDATA)>
+<!ELEMENT city (#PCDATA)>
+<!ELEMENT state (#PCDATA)>
+<!ELEMENT country (#PCDATA)>
+<!ELEMENT postcode (#PCDATA)>
+<!ELEMENT prosecution-history (prosecution-entry*)>
+<!ELEMENT prosecution-entry (identifier?, code?, type-code?, due-date?, date?, history-text?)>
+<!ELEMENT code (#PCDATA)>
+<!ELEMENT due-date (#PCDATA)>
+<!ELEMENT date (#PCDATA)>
+<!ELEMENT history-text (#PCDATA)>
+]>

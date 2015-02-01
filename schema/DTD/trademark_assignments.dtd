@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE trademark-assignments [<!-- DOCUMENT TYPE DEFINITION FOR TRADEMARK ASSIGNMENTS
+Reference this DTD as PUBLIC "-//USPTO//DTD TRADEMARK_ASSIGNMENTS V1.0 2013-09-05//EN"
+
+Contact:
+U.S. Patent and Trademark Office
+Electronic Information Products Division
+P.O. Box 1450
+Alexandria, VA 22313
+ipd@uspto.gov
+
+***** START REVISION HISTORY *****
+12/01/2000 Added ACK_DATE (Date Acknowledged) to PARTY element.
+03/06/2002 Updated element names to conform to PTO Enterprise standard element names.
+05/14/2002 Updated property element to include Trademark Law Treaty values
+05/19/2003 Added LAST-UPDATE-DATE element to the group element <assignment>.
+08/28/2003 Updated property group element to add optional element International-Registration-Number.
+Updated property group elements serial-no, registration-no with optional parameter
+(These fields may not be available when an international registration number is present).
+10/10/2003 Removed space between registration-no element and the question mark attribute
+10/10/2003 Provided documentation statement for International Registration Number
+09/05/2013 Added new elements for composed of data that contains an XML structure for sub-entities.
+***** END REVISION HISTORY ********
+-->
+
+<!ELEMENT trademark-assignments (version, action-key-code, transaction-date, assignment-information)>
+<!ELEMENT version (version-no, version-date)>
+<!ELEMENT version-no (#PCDATA)>
+<!ELEMENT version-date (#PCDATA)>
+<!ELEMENT action-key-code (#PCDATA)>
+<!ELEMENT transaction-date (#PCDATA)>
+<!ELEMENT assignment-information (data-available-code | assignment-entry+)>
+<!ELEMENT data-available-code (#PCDATA)>
+<!ELEMENT assignment-entry (assignment, assignors, assignees, properties)>
+<!ELEMENT assignment (reel-no, frame-no, last-update-date, purge-indicator, date-recorded, page-count?, correspondent, conveyance-text)>
+<!ELEMENT reel-no (#PCDATA)>
+<!ELEMENT frame-no (#PCDATA)>
+<!ELEMENT last-update-date (#PCDATA)>
+<!ELEMENT purge-indicator (#PCDATA)>
+<!ELEMENT date-recorded (#PCDATA)>
+<!ELEMENT page-count (#PCDATA)>
+<!ELEMENT conveyance-text (#PCDATA)>
+<!ELEMENT correspondent (person-or-organization-name, address-1?, address-2?, address-3?, address-4?)>
+<!ELEMENT person-or-organization-name (#PCDATA)>
+<!ELEMENT address-1 (#PCDATA)>
+<!ELEMENT address-2 (#PCDATA)>
+<!ELEMENT address-3 (#PCDATA)>
+<!ELEMENT address-4 (#PCDATA)>
+<!ELEMENT assignors (assignor+)>
+<!ELEMENT assignor (person-or-organization-name, formerly-statement?, dba-aka-ta-statement?, composed-of-statement?, address-1?, address-2?, city?, state?, country-name?, postcode?, execution-date?, date-acknowledged?, legal-entity-text?, nationality?)>
+<!ELEMENT formerly-statement (#PCDATA)>
+<!ELEMENT execution-date (#PCDATA)>
+<!ELEMENT date-acknowledged (#PCDATA)>
+<!ELEMENT city (#PCDATA)>
+<!ELEMENT state (#PCDATA)>
+<!ELEMENT country-name (#PCDATA)>
+<!ELEMENT postcode (#PCDATA)>
+<!ELEMENT legal-entity-text (#PCDATA)>
+<!ELEMENT nationality (#PCDATA)>
+<!ELEMENT assignees (assignee+)>
+<!ELEMENT assignee (person-or-organization-name, address-1?, dba-aka-ta-statement?, composed-of-statement?, formerly-statement?, address-2?, city?, state?, country-name?, postcode?, legal-entity-text?, nationality?)>
+<!ELEMENT dba-aka-ta-statement (#PCDATA)>
+<!ELEMENT composed-of-statement (#PCDATA | sub-party)*>
+<!ELEMENT sub-party (name, entity, stctry, composed-of?)>
+<!ELEMENT name (#PCDATA)>
+<!ELEMENT entity (#PCDATA)>
+<!ATTLIST entity code CDATA #IMPLIED>
+<!ELEMENT stctry (#PCDATA)>
+<!ATTLIST stctry code CDATA #IMPLIED>
+<!ELEMENT composed-of (sub-party+)>
+<!ELEMENT properties (property+)>
+<!ELEMENT property (serial-no, registration-no?, trademark-law-treaty-property?, intl-reg-no?)>
+<!ELEMENT serial-no (#PCDATA)>
+<!ELEMENT registration-no (#PCDATA)>
+<!ELEMENT trademark-law-treaty-property (tlt-mark-name?, tlt-mark-description?)>
+<!ELEMENT tlt-mark-name (#PCDATA)>
+<!ELEMENT tlt-mark-description (#PCDATA)>
+<!ELEMENT intl-reg-no (#PCDATA)>
+]>

@@ -48,6 +48,15 @@ def CreateRefreshDirectory(directory_path):
 def getSchemaPath():
     return os.path.join(os.path.expanduser(config.target_dir), config.schema_dir)
 
+
+def getParsedFiles():
+    parsed_path = os.path.join(os.path.expanduser(config.target_dir), config.subdirs['parsed_dir'])
+    files = os.listdir(parsed_path)
+    return [os.path.join(parsed_path,s) for s in files]
+
+
+
+
 def setupFileSystem():
     print 'checking filesystem..............'
     path = os.path.expanduser(config.target_dir)

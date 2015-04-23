@@ -8,6 +8,8 @@ def clean(data):
         return config.null_value
     o = data.strip()
     for item in config.escaped_chars:
+        #o = o.replace(item, "GG_FAGGOT")
+        o = o.replace('\\','\\\\')
         o = o.replace(item, "\\"+item)
     return o
 

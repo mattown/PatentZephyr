@@ -89,7 +89,7 @@ data = {
 
 
         #pct-or-regional-publishing-data
-        #us-appendix-data none in schema
+        #us-appendix-data none in schema_documents
         ['us_claim_statement']   # get it us-claim-statement at one level below the bib parse first!
 
 

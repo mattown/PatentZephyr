@@ -1,7 +1,7 @@
 
 
 
-
+desc = 'trade_ass'
 data = {
 
     'trademarkassignment' : [

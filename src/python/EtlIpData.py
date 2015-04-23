@@ -87,7 +87,7 @@ def run_etl(year, is_hist, type):
     #  trademark applications
     #
     elif type == 'trademark-application':
-        urls = DF.getTradeMarkApplicationUrlsToDownload(year, is_hist)
+        urls = DF.getTradeMarkApplicationUrlsToDownload(year, is_hist, True)
     #
     #  trademark assignments
     #
@@ -102,7 +102,7 @@ def run_etl(year, is_hist, type):
     #  Patent assignments
     #
     elif type == 'patent-assignment':
-        urls = DF.getPatentAssignmentUrlsToDownload(year, is_hist)
+        urls = DF.getPatentAssignmentUrlsToDownload(year, is_hist, True)
     #
     #  Patent maintence fees
     #
@@ -128,8 +128,8 @@ if __name__ == '__main__':
 
 
     #year, is_hist, type = 2015, False, 'patent-grant'
-    year, is_hist, type = 2014, True, 'patent-application'
-    #year, is_hist, type = 2015, True, 'trademark-application'
+    #year, is_hist, type = 2014, True, 'patent-application'
+    year, is_hist, type = 2015, True, 'trademark-application'
     #year, is_hist, type = 2013, True, 'trademark-assignment'
     #year, is_hist, type = 2012, True, 'trademark-tab'
     #year, is_hist, type = 2015, True, 'patent-assignment'
@@ -139,7 +139,7 @@ if __name__ == '__main__':
     #year, is_hist, type = 2015, False, 'patent-maint-fee'
 
     run_etl(year, is_hist, type)
-
+    #parseXML(year, type)
     #for y in range(2005,2016):
     #    print y
     #    run_etl(y, is_hist, type)

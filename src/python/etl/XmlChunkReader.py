@@ -281,4 +281,4 @@ def chunk(path):
     r.close()
     return data
 
-chunk('/Users/matthewharrison/PatentDisplayBuild/unzip_tmp/ipa150129.xml')
+#chunk('/Users/matthewharrison/PatentDisplayBuild/unzip_tmp/ipa150129.xml')

@@ -71,13 +71,18 @@ class parser:
 
     def writeData(self, filename, ddict):
         output = []
+        d = schema.data
 
         for k in self.headers[filename]:
             output.append(self.getData(ddict,k))
         try:
-            self.filewriters[filename].write(config.file_delimiter.join(output)+config.file_newline)
+            data = config.file_delimiter.join(output)+config.file_newline
+            assert len(d[filename]) == len(data.split(config.file_delimiter))
+            self.filewriters[filename].write(data)
         except:
-            print output, ddict,self.headers[filename]
+            print len(d[filename]), len(data.split(config.file_delimiter)), data,d[filename], output, ddict,self.headers[filename]
+
+
     def writeHeaders(self):
         d = schema.data
         for k in d.keys():
@@ -125,9 +130,9 @@ class parser:
         d['transaction_date'] = self.getXMLPathData(r,'transaction-date')
         self.tradenum = '%s-%s-%s' % (d['serial_number'],d['registration_number'],d['transaction_date'] )
         d['tradenum'] = self.tradenum
+
         assert self.tradenum != None
         assert self.tradenum != ''
-
 
         d['case'] = self.getXMLPathData(r,'case-file-header/')
         d['filing_date'] = self.getXMLPathData(r,'case-file-header/filing-date')
@@ -202,9 +207,8 @@ class parser:
         d['corr_add_3'] = self.getXMLPathData(r,'correspondent/address-3')
         d['corr_add_4'] = self.getXMLPathData(r,'correspondent/address-4')
         d['corr_add_6'] = self.getXMLPathData(r,'correspondent/address-5')
-
         d['international_registration_number'] = self.getXMLPathData(r,'international-registration/international-registration-number')
-        d['international-_registration_date'] = self.getXMLPathData(r,'international-registration/international-registration-date')
+        d['international_registration_date'] = self.getXMLPathData(r,'international-registration/international-registration-date')
         d['international_publication_date'] = self.getXMLPathData(r,'international-registration/international-publication-date')
         d['international_renewal_date'] = self.getXMLPathData(r,'international-registration/international-renewal-date')
         d['auto_protection_date'] = self.getXMLPathData(r,'international-registration/auto-protection-date')
@@ -252,7 +256,7 @@ class parser:
         for item in r.findall( 'prior-registration-applications/prior-registration-application'):
             subdict = {}
             subdict['tradenum'] = self.tradenum
-            subdict['other-related_in'] = other
+            subdict['other_related_in'] = other
             subdict['relationship_type'] = self.getXMLPathData(item, 'relationship-type')
             subdict['number'] = self.getXMLPathData(item, 'number')
             output.append(subdict)
@@ -286,7 +290,7 @@ class parser:
             subdict['international_code_total_no'] = self.getXMLPathData(item, 'international-code-total-no')
             subdict['us_code_total_no'] = self.getXMLPathData(item, 'us-code-total-no')
             subdict['international_code_concat'] = self.getXMLPathData(item, 'international-code')  # NEED CONCAT
-            subdict['code_concat'] = self.getXMLPathData(item, 'us-code')   # NEED CONCAT
+            subdict['us_code_concat'] = self.getXMLPathData(item, 'us-code')   # NEED CONCAT
             subdict['status_code'] = self.getXMLPathData(item, 'status-code')
             subdict['status_date'] = self.getXMLPathData(item, 'status-date')
             subdict['first_use_anywhere_date'] = self.getXMLPathData(item, 'first-use-anywhere-date')
@@ -411,11 +415,11 @@ class parser:
 
 
 if __name__ == '__main__':
-    f = codecs.open('/Users/matthewharrison/PatentDisplayBuild/unzip_tmp/apc150117.xml','r', encoding='UTF' )
+    f = codecs.open('/Users/matthewharrison/PatentDisplayBuild/unzip_tmp/apc150327.xml','r', encoding='UTF' )
     path = '/Users/matthewharrison/PycharmProjects/cuddlenuggets/PatentZephyr/PatentDisplayBuild'
     data = f.read().encode('utf-8')
     #root = ET.fromstring(data)
 
 
-    p =parser(path)
-    p.parse(data)
+    p =parser(path,'taCurrent')
+    p.parse('/Users/matthewharrison/PatentDisplayBuild/unzip_tmp/apc150327.xml')

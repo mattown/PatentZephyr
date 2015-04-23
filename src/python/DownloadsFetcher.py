@@ -110,25 +110,50 @@ def getPatentApplicationUrlsToDownload(year, is_hist, google_url=False):
 #   Trademark Application URLS
 #
 
-def getTradeMarkApplicationUrlsToDownload(year, is_hist):
-    print 'fetching trademark applications urls'
-    year = str(year)
-    if int(year) > 2013:
-        pattern = re.compile("downloads/TrademarkDailyXML/"+year+"/.+\.zip")
+def getTradeMarkApplicationUrlsToDownload(year, is_hist, google_url=False):
+    if google_url ==False:
+        print 'fetching trademark applications urls'
+        year = str(year)
+        if int(year) > 2014:
+            pattern = re.compile("downloads/TrademarkDailyXML/"+year+"/.+\.zip")
+        else:
+            pattern = re.compile("downloads/TrademarkDailyXML/1884-2014/.+\.zip")
+        htmlsource = urllib.urlopen("http://patents.reedtech.com/tmappxml.php")
+        htmlstring = htmlsource.read()
+        urls = pattern.findall(htmlstring)
+        # if is_hist = true return everything for given year else return latest file
+        output_urls =[]
+        for u in urls:
+            output_urls.append('http://patents.reedtech.com/'+u.split('">')[0])
+            #print 'http://patents.reedtech.com/'+u.split('">')[0]
+        if is_hist:
+            return output_urls
+        else:
+            return [output_urls[0]]
     else:
-        pattern = re.compile("downloads/TrademarkDailyXML/1884-2013/.+\.zip")
-    htmlsource = urllib.urlopen("http://patents.reedtech.com/tmappxml.php")
-    htmlstring = htmlsource.read()
-    urls = pattern.findall(htmlstring)
-    # if is_hist = true return everything for given year else return latest file
-    output_urls =[]
-    for u in urls:
-        output_urls.append('http://patents.reedtech.com/'+u.split('">')[0])
-        #print 'http://patents.reedtech.com/'+u.split('">')[0]
-    if is_hist:
-        return output_urls
-    else:
-        return [output_urls[0]]
+
+        year = str(year)
+        if int(year) < 2013:
+
+            pattern = re.compile("storage.googleapis.com/trademarks/retro/2012/.+\.zip")
+        else:
+            pattern = re.compile("storage.googleapis.com/trademarks/applications/"+year+"/.+\.zip")
+
+
+        htmlsource = urllib.urlopen("http://www.google.com/googlebooks/uspto-trademarks-recent-applications.html")
+        htmlstring = htmlsource.read()
+        urls = pattern.findall(htmlstring)
+        print urls
+        # if is_hist = true return everything for given year else return latest file
+        output_urls =[]
+        for u in urls:
+            output_urls.append('http://'+u)
+            #print 'http://patents.reedtech.com/'+u.split('">')[0]
+        print output_urls
+        if is_hist:
+            return output_urls
+        else:
+            return [output_urls[-1]]
 
 #
 #   Trademark Assignment URLS

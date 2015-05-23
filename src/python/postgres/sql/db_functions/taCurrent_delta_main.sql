@@ -12,7 +12,7 @@ SELECT upsert_tapp_taCurrent_case_file_owners();
 SELECT upsert_tapp_taCurrent_case_file_statements();
 SELECT upsert_tapp_taCurrent_case_file_event_statement();
 SELECT upsert_tapp_taCurrent_trademark();
-SELECT upsert_tapp_taCurrent_prior_registration_applications();
+SELECT upsert_tapp_taCurrent_prior_registration_applications()
 END;
 $$ LANGUAGE plpgsql;
 

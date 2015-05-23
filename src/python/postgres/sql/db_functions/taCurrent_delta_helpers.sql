@@ -111,6 +111,10 @@ status_code,
 status_date,
 mark_identification,
 mark_drawing_code,
+mark_drawing_code_is_old,
+mark_drawing_code_position_1,
+mark_drawing_code_position_2,
+mark_drawing_code_position_3,
 published_for_opposition_date,
 amend_to_register_date,
 abandonment_date,
@@ -206,6 +210,10 @@ status_code,
 to_date(status_date,'YYYYMMDD'),
 mark_identification,
 mark_drawing_code,
+mark_drawing_code_is_old,
+mark_drawing_code_position_1,
+mark_drawing_code_position_2,
+mark_drawing_code_position_3,
 to_date(published_for_opposition_date,'YYYYMMDD'),
 to_date(amend_to_register_date,'YYYYMMDD'),
 to_date(abandonment_date,'YYYYMMDD'),
@@ -262,7 +270,7 @@ drawing_3d_current_in,
 standard_characters_claimed_in,
 filing_basis_filed_as_66a_in,
 filing_basis_current_66a_in,
-renewal_date,
+to_date(renewal_date,'YYYYMMDD'),
 law_office_assigned_location_code,
 current_location,
 to_date(location_date,'YYYYMMDD'),
@@ -286,6 +294,14 @@ first_refusal_in
 FROM
 in_taCurrent_trademark a
 WHERE
+action_keys != 'action_keys' and
+ NOT EXISTS (SELECT 1 FROM taCurrent_trademark b WHERE b.action_keys = a.action_keys) and
+serial_number != 'serial_number' and
+ NOT EXISTS (SELECT 1 FROM taCurrent_trademark b WHERE b.serial_number = a.serial_number) and
+registration_number != 'registration_number' and
+ NOT EXISTS (SELECT 1 FROM taCurrent_trademark b WHERE b.registration_number = a.registration_number) and
+transaction_date != 'transaction_date' and
+ NOT EXISTS (SELECT 1 FROM taCurrent_trademark b WHERE b.transaction_date = a.transaction_date) and
 tradenum != 'tradenum' and
  NOT EXISTS (SELECT 1 FROM taCurrent_trademark b WHERE b.tradenum = a.tradenum) 
 ;
@@ -432,12 +448,28 @@ LOCK TABLE taCurrent_case_file_statements IN EXCLUSIVE MODE;
 INSERT INTO taCurrent_case_file_statements
 (
 tradenum,
+type_code_raw,
 type_code,
+prime_class,
+af_code,
+gs_code,
+tr_code,
+sequential_number,
+year_of_entry,
+month_of_entry,
 text
 )
 SELECT
 tradenum,
+type_code_raw,
 type_code,
+prime_class,
+af_code,
+gs_code,
+tr_code,
+sequential_number,
+year_of_entry,
+month_of_entry,
 text
 FROM
 in_taCurrent_case_file_statements a

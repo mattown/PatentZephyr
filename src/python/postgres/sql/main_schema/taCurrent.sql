@@ -17,7 +17,15 @@ ON taCurrent_madrid_filing_requests ( tradenum );
 DROP TABLE IF EXISTS taCurrent_case_file_statements ;
 CREATE TABLE taCurrent_case_file_statements (
 tradenum text,
+type_code_raw text,
 type_code text,
+prime_class text,
+af_code text,
+gs_code text,
+tr_code text,
+sequential_number text,
+year_of_entry text,
+month_of_entry text,
 text text
 );
 DROP INDEX IF EXISTS taCurrent_case_file_statements_k_idx;
@@ -134,13 +142,17 @@ action_keys text,
 serial_number text,
 registration_number text,
 transaction_date text,
-tradenum text PRIMARY KEY ,
+tradenum text,
 filing_date date,
 registration_date date,
 status_code text,
 status_date date,
 mark_identification text,
 mark_drawing_code text,
+mark_drawing_code_is_old text,
+mark_drawing_code_position_1 text,
+mark_drawing_code_position_2 text,
+mark_drawing_code_position_3 text,
 published_for_opposition_date date,
 amend_to_register_date date,
 abandonment_date date,
@@ -197,7 +209,7 @@ drawing_3d_current_in text,
 standard_characters_claimed_in text,
 filing_basis_filed_as_66a_in text,
 filing_basis_current_66a_in text,
-renewal_date text,
+renewal_date date,
 law_office_assigned_location_code text,
 current_location text,
 location_date date,
@@ -221,4 +233,8 @@ first_refusal_in text
 );
 DROP INDEX IF EXISTS taCurrent_trademark_k_idx;
 CREATE INDEX taCurrent_trademark_k_idx
-ON taCurrent_trademark ( tradenum );
+ON taCurrent_trademark ( action_keys,
+serial_number,
+registration_number,
+transaction_date,
+tradenum );

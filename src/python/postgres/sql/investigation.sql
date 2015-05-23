@@ -196,5 +196,54 @@ where t.filing_date > to_Date('20130101','YYYYMMDD')
 group by o.party_name, t.tradenum, t.attorney_name) distinct_trademarks
 group by party_name, attorney_name order by cnt desc limit 500;
 
+-- Investigate dat Delta on dat Canadian Club son
+
+--case file statements
+
+Select sub.tradenum, sub.creation_datetime, sub.action_keys, q.type_code_raw, q.sequential_number, q.year_of_entry, q.month_of_entry, q.text
+FROM in_tacurrent_case_file_statements q
+JOIN
+(
+select tradenum, creation_datetime, action_keys from in_tacurrent_trademark where serial_number = '71080948' order by status_date
+) sub
+on q.tradenum = sub.tradenum
+order by sub.creation_datetime, q.sequential_number
+;
+ 71080948-TX-apc150120 | 201501202249      | TX          | GS0491        |                   |               |                | WHISKY
+ 71080948-TX-apc150120 | 201501202249      | TX          | CC0000        |                   |               |                | Color is not claimed as a feature of the mark.
+ 71080948-TX-apc150121 | 201501212242      | TX          | GS0491        |                   |               |                | WHISKY
+ 71080948-TX-apc150121 | 201501212242      | TX          | CC0000        |                   |               |                | Color is not claimed as a feature of the mark.
+ 71080948-TX-apc150125 | 201501252207      | TX          | GS0491        |                   |               |                | WHISKY
+ 71080948-TX-apc150125 | 201501252207      | TX          | CC0000        |                   |               |                | Color is not claimed as a feature of the mark.
+ 71080948-TX-apc150203 | 201502032307      | TX          | CC0000        |                   |               |                | Color is not claimed as a feature of the mark.
+ 71080948-TX-apc150203 | 201502032307      | TX          | GS0491        |                   |               |                | WHISKY
+ 71080948-TX-apc150204 | 201502042310      | TX          | CC0000        |                   |               |                | Color is not claimed as a feature of the mark.
+ 71080948-TX-apc150204 | 201502042310      | TX          | GS0491        |                   |               |                | WHISKY
+ 71080948-46-apc150310 | 201503102309      | 46          | GS0491        |                   |               |                | WHISKY
+ 71080948-46-apc150310 | 201503102309      | 46          | CC0000        |                   |               |                | Color is not claimed as a feature of the mark.
+ --case_file_event_statement (seems added)
+ Select sub.tradenum, sub.creation_datetime, sub.action_keys, q.code,  q.type, q.description_text, q.date, q.number
+FROM in_tacurrent_case_file_event_statement q
+JOIN
+(
+select tradenum, creation_datetime, action_keys from in_tacurrent_trademark where serial_number = '71080948' order by status_date
+) sub
+on q.tradenum = sub.tradenum
+order by sub.creation_datetime, q.date
+;
 
 
+ Select sub.tradenum, sub.creation_datetime, sub.action_keys, q.entry_number,  q.party_type, q.legal_entity_type_code, q.entity_statement, q.party_name
+
+FROM in_tacurrent_case_file_owners q
+JOIN
+(
+select tradenum, creation_datetime, action_keys from in_tacurrent_trademark where serial_number = '71080948' order by status_date
+) sub
+on q.tradenum = sub.tradenum
+order by sub.creation_datetime
+;
+
+select * from in_tacurrent_case_file_owners where name_change_explanation_concat is not null limit 10;
+
+--

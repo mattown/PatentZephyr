@@ -263,13 +263,13 @@ def chunk(path):
 
     if tParser != None:
         # parsing trademarks!
-        print 'Parsing!'
+        print 'Parsing Trademarks Applications!'
         tParser.parse(path)
 
 
     if paCurrentParser != None:
         # patent assignments!
-        print 'Parsing!'
+        print 'Parsing patent Assignments!'
         paCurrentParser.parse(path)
 
 

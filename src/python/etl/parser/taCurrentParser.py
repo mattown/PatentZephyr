@@ -38,6 +38,7 @@ class parser:
             'file_segments' : '',
             'action_keys' : ''
         }
+        self.filename = ''
 
 
     def getHeaders(self):
@@ -99,14 +100,19 @@ class parser:
 
     def getXMLPathData(self, r, path):
         if r.find(path) != None:
-            node = r.find(path)
-            if node ==None:
+
+            nodes = r.findall(path)
+            if len(nodes) ==0:
                 return config.null_value
             else:
-                o = util.traverse(node)
-                return util.clean(o)
+                output = []
+                for node in nodes:
+                    o = util.traverse(node)
+                    output.append(util.clean(o))
+                return ' '.join(output)
         else:
             return config.null_value
+
 
 
 #
@@ -128,18 +134,41 @@ class parser:
         d['serial_number'] = self.getXMLPathData(r,'serial-number')
         d['registration_number'] = self.getXMLPathData(r,'registration-number')
         d['transaction_date'] = self.getXMLPathData(r,'transaction-date')
-        self.tradenum = '%s-%s-%s' % (d['serial_number'],d['registration_number'],d['transaction_date'] )
+        self.tradenum = '%s-%s-%s' % (d['serial_number'],self.tradeheader['action_keys'],self.filename )
         d['tradenum'] = self.tradenum
 
         assert self.tradenum != None
         assert self.tradenum != ''
 
         d['case'] = self.getXMLPathData(r,'case-file-header/')
-        d['filing_date'] = self.getXMLPathData(r,'case-file-header/filing-date')
+        # filing date used for parser below
+        filing_date = self.getXMLPathData(r,'case-file-header/filing-date')
+        d['filing_date'] = filing_date
         d['registration_date'] = self.getXMLPathData(r,'case-file-header/registration-date')
         d['status_code'] = self.getXMLPathData(r,'case-file-header/status-code')
         d['status_date'] = self.getXMLPathData(r,'case-file-header/status-date')
         d['mark_identification'] = self.getXMLPathData(r,'case-file-header/mark-identification')
+        # small parser here for mark drawing positions
+        mark_drawing_code = self.getXMLPathData(r,'case-file-header/mark-drawing-code')
+        d['mark_drawing_code'] = mark_drawing_code
+        try:
+            if int(filing_date) >= int('20031103'):
+                is_old = '0'
+            else:
+                is_old = '1'
+        except:
+            is_old = '-1'
+        d['mark_drawing_code_is_old'] = is_old
+        if len(mark_drawing_code) >= 1:
+            d['mark_drawing_code_position_1'] = mark_drawing_code[0:1]
+        if len(mark_drawing_code) >= 2:
+            d['mark_drawing_code_position_2'] = mark_drawing_code[1:2]
+        if len(mark_drawing_code) >= 3:
+            d['mark_drawing_code_position_3'] = mark_drawing_code[2:]
+
+
+
+
         d['mark_drawing_code'] = self.getXMLPathData(r,'case-file-header/mark-drawing-code')
         d['published_for_opposition_date'] = self.getXMLPathData(r,'case-file-header/published-for-opposition-date')
         d['amend_to_register_date'] = self.getXMLPathData(r,'case-file-header/amend-to-register-date')
@@ -229,11 +258,38 @@ class parser:
 
         for item in r.findall( 'case-file-statements/case-file-statement'):
             subdict = {}
-
+            type_code = self.getXMLPathData(item, 'type-code')
             subdict['tradenum'] = self.tradenum
-            subdict['type_code'] = self.getXMLPathData(item, 'type-code')
+            subdict['type_code_raw'] = type_code
             subdict['text'] = self.getXMLPathData(item, 'text')
+            # here we attempt to map out the different values of the type code, depending on the map value
+            # we'll have to parse it out differently
+            # logic can be found here http://www.uspto.gov/sites/default/files/products/tmdailyapp-documentation.pdf
+            assert len(type_code) == 6
+            small_type_code = ''
+            if type_code[0:4] in ['TLIT','TNSF']:
+                small_type_code = type_code[0:4]
+            elif type_code =='LINKBR':
+                small_type_code = 'LINKBR'
+            else:
+                small_type_code = type_code[0:2]
+            if small_type_code =='AF':
+                subdict['prime_class'] = type_code[2:5]
+                subdict['af_code'] = type_code[5:6]
+            elif small_type_code in ['A0','B0','CU','MD','OR']:
+                subdict['year_of_entry'] = type_code[2:4]
+                subdict['month_of_entry'] = type_code[4:6]
+            elif small_type_code == 'TR':
+                subdict['sequential_number'] = type_code[3:5]
+                subdict['tr_code'] = type_code[5:6]
+            elif small_type_code =='GS':
+                subdict['prime_class'] = type_code[2:5]
+                subdict['gs_code'] = type_code[5:6]
+            elif small_type_code =='PM':
+                subdict['sequential_number'] = type_code[3:5]
+            subdict['type_code'] = small_type_code
             output.append(subdict)
+
         return output
 
     def getCaseFileEventStatements(self, r):
@@ -301,8 +357,10 @@ class parser:
 
     def getCaseFileOwners(self, r):
         output = []
+        inc = 0
         for item in r.findall( 'case-file-owners/case-file-owner'):
             subdict = {}
+            inc +=1
             subdict['tradenum'] = self.tradenum
             subdict['entry_number'] = self.getXMLPathData(item, 'entry-number')
             subdict['party_type'] = self.getXMLPathData(item, 'party-type')
@@ -322,6 +380,7 @@ class parser:
             subdict['dba_aka_text'] = self.getXMLPathData(item, 'dba-aka-text')
             subdict['composed_of_statement'] = self.getXMLPathData(item, 'composed-of-statement')
             subdict['name_change_explanation_concat'] = self.getXMLPathData(item, 'name-change-explanation')    # NEED CONCAT
+            subdict['name_change_explanation_concat'] = str(inc)
             output.append(subdict)
         return output
 
@@ -386,31 +445,35 @@ class parser:
         root = tree.getroot()
         #root = ET.fromstring(data)
 
+        self.filename = path.split('/')[-1].split('.')[0]
         #setup global headers
         self.updateHeaders(root)
         print self.headers
-        for item in root.findall('application-information/file-segments/action-keys/case-file'):
+        for headeritem in root.findall('application-information/file-segments/action-keys'):
             writedata = dict()
             self.tradenum = None
+            self.tradeheader['file_segments'] = self.getXMLPathData(headeritem, 'file-segment')
+            self.tradeheader['action_keys'] =  self.getXMLPathData(headeritem, 'action-key')
+            for item in headeritem.findall('case-file'):
+                self.tradenum = None
+                writedata['trademark'] = self.getTrademark(item)
 
-            writedata['trademark'] = self.getTrademark(item)
+                writedata['case_file_statements'] = self.getCaseFileStatements(item)
+                writedata['case_file_event_statement'] = self.getCaseFileEventStatements(item)
+                writedata['prior_registration_applications'] = self.getPriorRegistrationApplications(item)
 
-            writedata['case_file_statements'] = self.getCaseFileStatements(item)
-            writedata['case_file_event_statement'] = self.getCaseFileEventStatements(item)
-            writedata['prior_registration_applications'] = self.getPriorRegistrationApplications(item)
+                writedata['foreign_applications'] = self.getForeignApplications(item)
+                writedata['classifications'] = self.getClassifications(item)
+                writedata['case_file_owners'] = self.getCaseFileOwners(item)
 
-            writedata['foreign_applications'] = self.getForeignApplications(item)
-            writedata['classifications'] = self.getClassifications(item)
-            writedata['case_file_owners'] = self.getCaseFileOwners(item)
+                writedata['design_search'] = self.getDesignSearch(item)
+                madridData = self.getMadrid(item)
+                writedata['madrid_filing_requests'] = madridData[0]
+                writedata['madrid_history_events'] = madridData[1]
 
-            writedata['design_search'] = self.getDesignSearch(item)
-            madridData = self.getMadrid(item)
-            writedata['madrid_filing_requests'] = madridData[0]
-            writedata['madrid_history_events'] = madridData[1]
-
-            for key in writedata.keys():
-                for subitem in writedata[key]:
-                    self.writeData(key, subitem)
+                for key in writedata.keys():
+                    for subitem in writedata[key]:
+                        self.writeData(key, subitem)
         self.close()
 
 

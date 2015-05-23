@@ -129,6 +129,7 @@ if __name__ == '__main__':
 
     #year, is_hist, type = 2015, False, 'patent-grant'
     #year, is_hist, type = 2014, True, 'patent-application'
+    #year, is_hist, type = 2015, True, 'trademark-application'
     year, is_hist, type = 2015, True, 'trademark-application'
     #year, is_hist, type = 2013, True, 'trademark-assignment'
     #year, is_hist, type = 2012, True, 'trademark-tab'
@@ -139,7 +140,6 @@ if __name__ == '__main__':
     #year, is_hist, type = 2015, False, 'patent-maint-fee'
 
     run_etl(year, is_hist, type)
+
+    #uncomment this to just run the parser
     #parseXML(year, type)
-    #for y in range(2005,2016):
-    #    print y
-    #    run_etl(y, is_hist, type)

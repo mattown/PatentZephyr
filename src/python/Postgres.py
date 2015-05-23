@@ -90,11 +90,12 @@ def generate_delta_functions(schema):
     output.write(data)
     output.close()
 
-
+def generate_map_functions(schema):
+    pass
 
 
 generate_main_schema()
 generate_main_delta_functions()
-
+#generate_intake_schema(trademarks)
 #delete_everything()
 #load_trademarks()
